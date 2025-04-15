@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:menu_app/presentation/views/widgets/custum_text.dart';
+import 'package:menu_app/presentation/home/views/widgets/custum_text.dart';
 
 class OrderCount extends StatelessWidget {
   final int count;

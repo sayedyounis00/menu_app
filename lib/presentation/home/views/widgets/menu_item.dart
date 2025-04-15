@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/cubit/menu_cubit.dart';
-import 'package:menu_app/presentation/data/menu_item.dart';
-import 'package:menu_app/presentation/views/widgets/custum_text.dart';
-import 'package:menu_app/presentation/views/widgets/order_count.dart';
+import 'package:menu_app/presentation/home/cubit/menu_cubit.dart';
+import 'package:menu_app/presentation/home/data/menu_item.dart';
+import 'package:menu_app/presentation/home/views/widgets/custum_text.dart';
+import 'package:menu_app/presentation/home/views/widgets/order_count.dart';
 
 class MenuItem extends StatelessWidget {
   final MenuObject menuItem;

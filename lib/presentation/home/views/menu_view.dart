@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/cubit/menu_cubit.dart';
-import 'package:menu_app/presentation/views/widgets/menu_item.dart';
+import 'package:menu_app/presentation/home/cubit/menu_cubit.dart';
+import 'package:menu_app/presentation/home/views/widgets/menu_item.dart';
 
 class MenuView extends StatelessWidget {
   const MenuView({super.key});

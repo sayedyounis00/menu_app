@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:menu_app/presentation/views/cart_view.dart';
-import 'package:menu_app/presentation/views/menu_view.dart';
+import 'package:menu_app/presentation/home/views/cart_view.dart';
+import 'package:menu_app/presentation/home/views/menu_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

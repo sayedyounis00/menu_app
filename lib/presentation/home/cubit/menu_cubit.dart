@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/data/menu_item.dart';
+import 'package:menu_app/presentation/home/data/menu_item.dart';
 part 'menu_state.dart';
 
 class MenuCubit extends Cubit<MenuState> {

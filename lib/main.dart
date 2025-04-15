@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:menu_app/views/home_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:menu_app/presentation/cubit/menu_cubit.dart';
+import 'package:menu_app/presentation/views/home_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,12 +9,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeView(),
+    return BlocProvider(
+      create: (context) => MenuCubit(),
+      child: MaterialApp(
+        home: const HomeView(),
+        theme: ThemeData.dark(),
+      ),
     );
   }
 }

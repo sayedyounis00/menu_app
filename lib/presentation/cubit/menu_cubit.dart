@@ -14,14 +14,19 @@ class MenuCubit extends Cubit<MenuState> {
         image: "assets/pizza_e.png",
         count: 0),
     MenuObject(
-        id: 2, name: "Coffe", price: "40", image: "assets/coffe.png", count: 0),
+        id: 2,
+        name: "Coffee",
+        price: "40",
+        image: "assets/coffe.png",
+        count: 0),
     MenuObject(
         id: 3,
         name: "Cake",
         price: "10",
         image: "assets/cake_lice-.png",
         count: 0),
-    MenuObject(id: 4, name: "Tea", price: "5", image: "assets/tea.png", count: 0),
+    MenuObject(
+        id: 4, name: "Tea", price: "5", image: "assets/tea.png", count: 0),
     MenuObject(
         id: 5, name: "Rice", price: "30", image: "assets/rice.png", count: 0),
     MenuObject(

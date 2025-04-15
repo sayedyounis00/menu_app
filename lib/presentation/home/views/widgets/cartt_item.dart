@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/home/cubit/menu_cubit.dart';
-import 'package:menu_app/presentation/home/data/menu_item.dart';
+import 'package:menu_app/presentation/home/cart/cart_cubit.dart';
+import 'package:menu_app/presentation/home/data/menu_object.dart';
 import 'package:menu_app/presentation/home/views/widgets/custum_text.dart';
 
 class CarttItem extends StatelessWidget {
@@ -46,8 +46,7 @@ class CarttItem extends StatelessWidget {
                 const Spacer(),
                 IconButton(
                     onPressed: () {
-                      BlocProvider.of<MenuCubit>(context)
-                          .removeFromCart(index, cartItem);
+                      BlocProvider.of<CartCubit>(context).removeFromCartAndUpdateCount(cartItem.id, cartItem);
                     },
                     icon: const Icon(
                       Icons.remove_circle_outline,

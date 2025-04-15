@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/home/cubit/menu_cubit.dart';
-import 'package:menu_app/presentation/home/data/menu_item.dart';
+import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
+import 'package:menu_app/presentation/home/data/menu_object.dart';
 import 'package:menu_app/presentation/home/views/widgets/custum_text.dart';
 import 'package:menu_app/presentation/home/views/widgets/order_count.dart';
 
@@ -50,7 +50,7 @@ class MenuItem extends StatelessWidget {
                     IconButton(
                         onPressed: () {
                           BlocProvider.of<MenuCubit>(context)
-                              .addToCart(menuItem);
+                              .addToCartAndUpdateCount(menuItem);
                         },
                         icon: const Icon(
                           Icons.shopping_cart,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:menu_app/core/widget/input_feild.dart';
 import 'package:menu_app/presentation/admin_panel/cubit/admin_cubit.dart';
 import 'package:menu_app/presentation/admin_panel/view/widgets/admin_panel_view_body.dart';
-import 'package:menu_app/presentation/auth/view/widgets/input_feild.dart';
 import 'package:menu_app/presentation/home/data/menu_object.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -27,7 +27,7 @@ class _AdminPanelViewState extends State<AdminPanelView> {
     imageController.dispose();
     super.dispose();
   }
-  
+
   void addMenuItem() {
     final newItem = MenuObject(
       id: nextId++,

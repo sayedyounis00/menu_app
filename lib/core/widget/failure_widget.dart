@@ -1,7 +1,7 @@
 // signin_failure_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:menu_app/presentation/auth/view/widgets/grident_button.dart';
+import 'package:menu_app/core/widget/grident_button.dart';
 import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
 
 class FailureWidget extends StatelessWidget {

@@ -1,5 +1,4 @@
 import 'package:menu_app/presentation/home/data/menu_object.dart';
-import 'package:menu_app/presentation/home/views/widgets/menu_item.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AdminRepository {
@@ -18,15 +17,24 @@ class AdminRepository {
     });
   }
 
-  Future<void> addCartItemAndUpdateCount(int count,int id) async {
+  Future<void> addCartItem(int id) async {
     await supabase.from('menu_Items').update({
-      'count': count,
       'addedToCart': true,
-    }).eq('id',id);
-
+    }).eq('id', id);
   }
 
-  // Read all
+  Future<void> updateItemCount(int count, int id) async {
+    await supabase.from('menu_Items').update({
+      'count': count,
+    }).eq('id', id);
+  }
+
+  Future<void> removeFromCart( int id) async {
+    await supabase.from('menu_Items').update({
+      'addedToCart': false,
+    }).eq('id', id);
+  }
+
   Future<List<MenuObject>> getAllMenuItems() async {
     final response = await supabase.from('menu_Items').select();
     return (response as List)
@@ -63,14 +71,6 @@ class AdminRepository {
       'price': item.price,
       'image': item.image,
     }).eq('id', item.id);
-  }
-
-  Future<void> updateItemCountAndState(
-      {int? count, required int id, required bool state}) async {
-    await supabase.from('menu_Items').update({
-      'count': count,
-      'addedToCart': state,
-    }).eq('id', id);
   }
 
   // Delete

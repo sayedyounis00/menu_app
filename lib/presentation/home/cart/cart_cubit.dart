@@ -1,36 +1,33 @@
-import 'dart:developer';
+import 'dart:io';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:menu_app/presentation/admin_panel/data/repo/admin_repo.dart';
 import 'package:menu_app/presentation/home/data/menu_object.dart';
-import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
   CartCubit(this.client) : super(CartInitial());
+
+  int count = 0;
   final SupabaseClient client;
   List<MenuObject> cartItems = [];
 
   void getAllCartItems() async {
     emit(CartItemLoading());
-    cartItems = await AdminRepository(client).getAllCartItems();
-    emit(CartItemLoaded(cartItems: cartItems));
+    try {
+      cartItems = await AdminRepository(client).getAllCartItems();
+      emit(CartItemLoaded(cartItems: cartItems));
+    } on SocketException catch (e) {
+      emit(CartError(errMessage: e.toString()));
+    }
   }
 
   void removeFromCartAndUpdateCount(int id, MenuObject menuItem) {
-    AdminRepository(client).updateItemCountAndState(
-      count: menuItem.count--,
-      id: menuItem.id,
-      state: false,
-    );
+    count = --menuItem.count;
+    AdminRepository(client).updateItemCount(count, id);
     if (menuItem.count == 0) {
-      AdminRepository(client).updateItemCountAndState(
-        count: menuItem.count,
-        id: menuItem.id,
-        state: false,
-      );
+      AdminRepository(client).removeFromCart(id);
     }
     emit(CartItemLoaded(cartItems: cartItems));
   }

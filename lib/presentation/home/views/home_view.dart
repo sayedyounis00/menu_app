@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
 import 'package:menu_app/presentation/home/views/cart_view.dart';
 import 'package:menu_app/presentation/home/views/menu_view.dart';
 
@@ -23,6 +25,7 @@ class _HomeViewState extends State<HomeView> {
           onTap: (index) {
             setState(() {
               _currentIndex = index;
+              BlocProvider.of<MenuCubit>(context).getAllMenuItems();
             });
           },
           items: const [

@@ -11,7 +11,7 @@ class MenuView extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () {
         BlocProvider.of<MenuCubit>(context).getAllMenuItems();
-        return Future.delayed(const Duration(seconds: 1));
+        return Future.delayed(const Duration(milliseconds: 500));
       },
       child: const Scaffold(
         body: MenuViewBody(),

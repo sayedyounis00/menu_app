@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:menu_app/presentation/admin_panel/cubit/admin_cubit.dart';
 import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
 import 'package:menu_app/presentation/home/views/home_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,8 +20,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final supabase = Supabase.instance.client;
-    return BlocProvider(
-      create: (context) => MenuCubit(supabase)..getAllMenuItems(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => MenuCubit(supabase)..getAllMenuItems(),
+        ),
+        BlocProvider(
+          create: (context) => AdminCubit(supabase)..getAllMenuItems(),
+        )
+      ],
       child: MaterialApp(
         home: const HomeView(),
         theme: ThemeData.dark(),

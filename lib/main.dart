@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:menu_app/presentation/admin_panel/cubit/admin_cubit.dart';
 import 'package:menu_app/presentation/admin_panel/view/admin_panel.dart';
 import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
+import 'package:menu_app/presentation/home/views/home_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -26,12 +27,12 @@ class MyApp extends StatelessWidget {
           create: (context) => MenuCubit(supabase)..getAllMenuItems(),
         ),
         BlocProvider(
-          create: (context) => AdminCubit(supabase)..getAllMenuItems(),
+          create: (context) => AdminCubit()..getAllMenuItems(),
         )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const AdminPanelView(),
+        home: const HomeView(),
         theme: ThemeData.dark(),
       ),
     );

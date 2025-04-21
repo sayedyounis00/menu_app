@@ -1,60 +1,111 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:menu_app/presentation/home/cart/cart_cubit.dart';
 import 'package:menu_app/presentation/home/data/menu_object.dart';
 import 'package:menu_app/presentation/home/views/widgets/custum_text.dart';
 
-class CarttItem extends StatelessWidget {
+class CartItem extends StatelessWidget {
   final MenuObject cartItem;
   final int index;
-  const CarttItem({super.key, required this.index, required this.cartItem});
+  const CartItem({super.key, required this.index, required this.cartItem});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+
+    return Card(
+      margin: const EdgeInsets.all(5),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 145, 73, 1),
-            borderRadius: BorderRadius.circular(20)),
-        child: Column(
-          children: [
-            Image.asset(
-              cartItem.image,
-              height: size.height * .1,
-              width: size.width * .3,
-            ),
-            const Spacer(),
-            Row(
+          color: theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Column(
-                  children: [
-                    CustumText(
-                      text: cartItem.name,
-                      size: 25,
-                      fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: constraints.maxWidth * 0.5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: cartItem.image,
+                      width: double.infinity,
+                      placeholder: (context, url) => Container(
+                        color: theme.colorScheme.surface,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: theme.colorScheme.errorContainer,
+                        child: const Icon(Icons.fastfood, size: 40),
+                      ),
                     ),
-                    CustumText(
-                      text: "${cartItem.count}",
-                      size: 15,
-                      fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Item name and quantity
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustumText(
+                            text: cartItem.name,
+                            size: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          const SizedBox(height: 4),
+                          CustumText(
+                            fontWeight: FontWeight.bold,
+                            text: "Quantity: ${cartItem.count}",
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Remove button
+                    IconButton(
+                      onPressed: () {
+                        BlocProvider.of<CartCubit>(context)
+                            .removeFromCartAndUpdateCount(
+                                cartItem.id, cartItem);
+                      },
+                      icon: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.error,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.remove,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const Spacer(),
-                IconButton(
-                    onPressed: () {
-                      BlocProvider.of<CartCubit>(context).removeFromCartAndUpdateCount(cartItem.id, cartItem);
-                    },
-                    icon: const Icon(
-                      Icons.remove_circle_outline,
-                      size: 40,
-                    ))
+                // Price information
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: CustumText(
+                    text: "${cartItem.price}\$",
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

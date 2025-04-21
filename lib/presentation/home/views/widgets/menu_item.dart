@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
@@ -11,63 +12,99 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+
+    return Card(
+      margin: const EdgeInsets.all(8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 145, 73, 1),
-            borderRadius: BorderRadius.circular(20)),
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            Column(
+          color: theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              alignment: Alignment.topRight,
               children: [
-                Image.asset(
-                  menuItem.image,
-                  height: size.height * .1,
-                  width: size.width * .3,
-                ),
-                const Spacer(),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Column(
-                      children: [
-                        CustumText(
-                          text: menuItem.name,
-                          size: 25,
-                          fontWeight: FontWeight.bold,
+                    // Fixed height container for image
+                    SizedBox(
+                      height: constraints.maxWidth * 0.6, // Aspect ratio ~1:1.4
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          imageUrl: menuItem.image,
+                          width: double.infinity,
+                          // fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: theme.colorScheme.surface,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: theme.colorScheme.errorContainer,
+                            child: const Icon(Icons.fastfood, size: 40),
+                          ),
                         ),
-                        CustumText(
-                          text: menuItem.price + r" $",
-                          size: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ],
+                      ),
                     ),
-                    const Spacer(),
-                    IconButton(
+                    const SizedBox(height: 8),
+                    // Item name and price
+                    CustumText(
+                      text: menuItem.name,
+                      size: 15,
+                      fontWeight: FontWeight.bold,
+                      // maxLines: 1,
+                      // overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    CustumText(
+                      text: "${menuItem.price}\$",
+                      size: 16,
+                      // color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    // Add to cart button
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: IconButton(
                         onPressed: () {
                           BlocProvider.of<MenuCubit>(context)
                               .addToCartAndUpdateCount(menuItem);
                         },
-                        icon: const Icon(
-                          Icons.shopping_cart,
-                          size: 40,
-                        ))
+                        icon: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
+                // Order count badge
+                BlocBuilder<MenuCubit, MenuState>(
+                  builder: (context, state) {
+                    return OrderCount(count: menuItem.count);
+                  },
+                ),
               ],
-            ),
-            BlocBuilder<MenuCubit, MenuState>(
-              builder: (context, state) {
-                return OrderCount(
-                  count: menuItem.count,
-                );
-              },
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

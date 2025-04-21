@@ -6,7 +6,7 @@ class MenuObject {
   final bool state;
   int count;
 
-  MenuObject( {
+  MenuObject({
     required this.id,
     required this.name,
     required this.price,
@@ -15,15 +15,32 @@ class MenuObject {
     this.count = 0,
   });
 
-  
-   factory MenuObject.fromJson(Map<String, dynamic> json) {
+  MenuObject copyWith({
+    int? id,
+    String? name,
+    String? price,
+    String? image,
+    bool? state,
+    int? count,
+  }) {
+    return MenuObject(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      image: image ?? this.image,
+      state: state ?? this.state,
+      count: count ?? this.count,
+    );
+  }
+
+  factory MenuObject.fromJson(Map<String, dynamic> json) {
     return MenuObject(
       id: json['id'],
       name: json['name'],
       price: json['price'],
       image: json['image'],
       count: json['count'] ?? 0,
-      state: json['AddedToCart'] ,
+      state: json['AddedToCart'],
     );
   }
 
@@ -38,4 +55,3 @@ class MenuObject {
     };
   }
 }
-

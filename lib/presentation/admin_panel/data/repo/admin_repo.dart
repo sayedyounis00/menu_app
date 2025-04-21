@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:menu_app/presentation/home/data/menu_object.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AdminRepository {
@@ -29,7 +34,7 @@ class AdminRepository {
     }).eq('id', id);
   }
 
-  Future<void> removeFromCart( int id) async {
+  Future<void> removeFromCart(int id) async {
     await supabase.from('menu_Items').update({
       'addedToCart': false,
     }).eq('id', id);
@@ -93,4 +98,55 @@ class AdminRepository {
                 ))
             .toList());
   }
+  //Storage
+
+Future<String?> uploadImageFromGallery({String? customFileName}) async {
+  try {   
+    // 2. Pick image from gallery
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+      maxWidth: 1024,  // Optional: resize large images
+      maxHeight: 1024, // Optional: resize large images
+    );
+    
+    if (pickedFile == null) return null;
+    
+    // 3. Prepare file for upload
+    final file = File(pickedFile.path);
+    final fileBytes = await file.readAsBytes();
+    final fileExtension = path.extension(file.path).toLowerCase();
+    final mimeType = lookupMimeType(file.path) ?? 'image/jpeg';
+    
+    // 4. Generate file path - organized by date
+    final now = DateTime.now();
+    final fileName = customFileName ?? '${now.millisecondsSinceEpoch}$fileExtension';
+    final fullPath = 'items/$fileName'; // "items" matches your bucket structure
+    
+    // 5. Upload to 'menuapp' bucket
+    await Supabase.instance.client.storage
+        .from('menuapp')
+        .uploadBinary(
+          fullPath, 
+          fileBytes,
+          fileOptions: FileOptions(
+            contentType: mimeType,
+            upsert: true, // Overwrite if file exists
+          ),
+        );
+    
+    // 6. Get public URL
+    return Supabase.instance.client.storage
+        .from('menuapp')
+        .getPublicUrl(fullPath);
+    
+  } catch (e) {
+    print('Error uploading image: $e');
+    // Handle different error types
+    if (e is StorageException) {
+      print('Storage error details: ${e.message}');
+    }
+    return null;
+  }
+}
 }

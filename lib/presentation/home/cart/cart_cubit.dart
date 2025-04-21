@@ -28,6 +28,7 @@ class CartCubit extends Cubit<CartState> {
     AdminRepository(client).updateItemCount(count, id);
     if (menuItem.count == 0) {
       AdminRepository(client).removeFromCart(id);
+      getAllCartItems();
     }
     emit(CartItemLoaded(cartItems: cartItems));
   }

@@ -29,9 +29,19 @@ class AdminCubit extends Cubit<AdminState> {
     }
   }
 
+  void editMenuItem(MenuObject menuItem) async {
+    try {
+      AdminRepository(client).updateMenuItem(menuItem);
+      emit(AddItemSuccess(menuItems: _menuItems));
+    } on SocketException catch (e) {
+      emit(AddItemFailure(errMessage: e.toString()));
+    }
+  }
+
   void deleteItem(int id) async {
     try {
       AdminRepository(client).deleteMenuItem(id);
+      getAllMenuItems();
       emit(AddItemSuccess(menuItems: _menuItems));
     } on SocketException catch (e) {
       emit(AddItemFailure(errMessage: e.toString()));

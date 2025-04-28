@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:menu_app/core/helper/block_screen_shot.dart';
 import 'package:menu_app/presentation/admin_panel/cubit/admin_cubit.dart';
-import 'package:menu_app/presentation/admin_panel/view/admin_panel.dart';
+import 'package:menu_app/presentation/auth/all/login_register_cubit.dart';
+import 'package:menu_app/presentation/auth/view/login_view.dart';
 import 'package:menu_app/presentation/home/menu/menu_cubit.dart';
-import 'package:menu_app/presentation/home/views/home_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NoScreenShot().disableScreenshot();
   await Supabase.initialize(
     url: 'https://phqawsgtnxrngovjgfwq.supabase.co',
     anonKey:
@@ -27,12 +29,16 @@ class MyApp extends StatelessWidget {
           create: (context) => MenuCubit(supabase)..getAllMenuItems(),
         ),
         BlocProvider(
+          create: (context) =>
+              AuthntaCubit(supabase: supabase)..checkAuthStatus(),
+        ),
+        BlocProvider(
           create: (context) => AdminCubit()..getAllMenuItems(),
         )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const HomeView(),
+        home: const LoginView(),
         theme: ThemeData.dark(),
       ),
     );

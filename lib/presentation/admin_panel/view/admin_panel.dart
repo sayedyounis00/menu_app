@@ -14,14 +14,10 @@ class _AdminPanelViewState extends State<AdminPanelView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Admin Panel'),
-      ),
       body: const AdminPanelViewBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-         BlocProvider.of<AdminCubit>(context). showItemDialog(context: context);
+          BlocProvider.of<AdminCubit>(context).showItemDialog(context: context);
         },
         child: const Icon(Icons.add),
       ),

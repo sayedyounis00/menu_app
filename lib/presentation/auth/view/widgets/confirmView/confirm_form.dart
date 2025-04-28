@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:menu_app/core/widget/failure_widget.dart';
 import 'package:menu_app/core/widget/grident_button.dart';
 import 'package:menu_app/core/widget/input_feild.dart';
+import 'package:menu_app/presentation/admin_panel/view/admin_panel.dart';
 import 'package:menu_app/presentation/auth/all/login_register_cubit.dart';
 import 'package:menu_app/presentation/auth/all/login_register_state.dart';
 import 'package:menu_app/presentation/auth/view/login_view.dart';
@@ -74,7 +75,7 @@ class _ConfirmCodeFormState extends State<ConfirmCodeForm> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const LoginView(),
+              builder: (context) => const AdminPanelView(),
             ),
           );
         }

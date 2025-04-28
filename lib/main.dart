@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NoScreenShot().disableScreenshot();
+  NoScreenShot().enableScreenShot();
   await Supabase.initialize(
     url: 'https://phqawsgtnxrngovjgfwq.supabase.co',
     anonKey:

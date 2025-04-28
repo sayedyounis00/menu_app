@@ -65,7 +65,7 @@ class FailureWidget extends StatelessWidget {
               onPressed: retryCallback ??
                   () {
                     BlocProvider.of<MenuCubit>(context).getAllMenuItems();
-                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   },
             ),
           ],

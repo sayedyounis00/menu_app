@@ -15,98 +15,87 @@ class MenuItem extends StatelessWidget {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    return Card(
-      margin: const EdgeInsets.all(8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Stack(
-              alignment: Alignment.topRight,
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Fixed height container for image
-                    SizedBox(
-                      height: constraints.maxWidth * 0.6, // Aspect ratio ~1:1.4
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: CachedNetworkImage(
-                          imageUrl: menuItem.image,
-                          width: double.infinity,
-                          // fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            color: theme.colorScheme.surface,
-                            child: const Center(
-                                child: CircularProgressIndicator()),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            color: theme.colorScheme.errorContainer,
-                            child: const Icon(Icons.fastfood, size: 40),
-                          ),
-                        ),
+                SizedBox(
+                  height: size.height * 0.1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: menuItem.image,
+                      width: double.infinity,
+                      fit: BoxFit.fitHeight,
+                      placeholder: (context, url) => Container(
+                        color: theme.colorScheme.surface,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: theme.colorScheme.errorContainer,
+                        child: const Icon(Icons.fastfood, size: 40),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Item name and price
-                    CustumText(
-                      text: menuItem.name,
-                      size: 15,
-                      fontWeight: FontWeight.bold,
-                      // maxLines: 1,
-                      // overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    CustumText(
-                      text: "${menuItem.price}\$",
-                      size: 16,
-                      // color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    // Add to cart button
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        onPressed: () {
-                          BlocProvider.of<MenuCubit>(context)
-                              .addToCartAndUpdateCount(menuItem);
-                        },
-                        icon: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.shopping_cart,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                // Order count badge
-                BlocBuilder<MenuCubit, MenuState>(
-                  builder: (context, state) {
-                    return OrderCount(count: menuItem.count);
-                  },
+                const SizedBox(height: 8),
+                // Item name and price
+                CustumText(
+                  text: menuItem.name,
+                  size: 15,
+                  fontWeight: FontWeight.bold,
+                  maxLine: 1,
+                  overFlow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                CustumText(
+                  text: "${menuItem.price}DB",
+                  size: 16,
+                  txtColor: theme.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+                // Add to cart button
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    onPressed: () {
+                      BlocProvider.of<MenuCubit>(context)
+                          .addToCartAndUpdateCount(menuItem);
+                    },
+                    icon: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             );
+          }),
+        ),
+        // Order count badge
+        BlocBuilder<MenuCubit, MenuState>(
+          builder: (context, state) {
+            return OrderCount(count: menuItem.count);
           },
         ),
-      ),
+      ],
     );
   }
 }

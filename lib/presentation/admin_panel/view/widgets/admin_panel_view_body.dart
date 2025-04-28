@@ -112,7 +112,7 @@ class _AdminPanelViewBodyState extends State<AdminPanelViewBody> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           subtitle: Text(
-            "\$${menuItem.price}",
+            "${menuItem.price} DB",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.green.shade700,
                 ),

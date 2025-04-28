@@ -16,6 +16,7 @@ class CartCubit extends Cubit<CartState> {
 
   List<MenuObject> get cartItems => _cartItems;
   int get totalItems => _totalItems;
+  double get totalPrice => calculateTotalPrice();
 
   Future<void> getAllCartItems() async {
     emit(CartLoading());
@@ -30,15 +31,21 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
+  double calculateTotalPrice() {
+    double formatedPrice = _cartItems.fold(
+        0, (total, item) => total + (double.parse(item.price) * item.count));
+    return double.parse(formatedPrice.toStringAsFixed(3));
+  }
+
   Future<void> removeFromCartAndUpdateCount(int id, MenuObject menuItem) async {
     try {
       // Update local state immediately for responsive UI
       final updatedCount = menuItem.count - 1;
       _updateCartItem(id, updatedCount);
-      
+
       // Update in repository
       await _repository.updateItemCount(updatedCount, id);
-      
+
       if (updatedCount <= 0) {
         await _repository.removeFromCart(id);
         await getAllCartItems(); // Refresh the list
@@ -63,6 +70,11 @@ class CartCubit extends Cubit<CartState> {
   void _updateTotalCount() {
     _totalItems = _cartItems.fold(0, (sum, item) => sum + item.count);
   }
+
+  // void clearCart() {
+  //   _cartItems = [];
+  //   emit(CartLoaded(cartItems: _cartItems));
+  // }
 
   @override
   Future<void> close() {

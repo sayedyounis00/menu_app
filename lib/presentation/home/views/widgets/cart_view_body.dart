@@ -73,19 +73,41 @@ class _CartViewBodyState extends State<CartViewBody> {
       return _buildEmptyState();
     }
 
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.8,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-      ),
-      itemCount: cartItems.length,
-      itemBuilder: (context, index) => CartItem(
-        cartItem: cartItems[index],
-        index: index,
-      ),
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.builder(
+            padding: const EdgeInsets.all(16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.8,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+            ),
+            itemCount: cartItems.length,
+            itemBuilder: (context, index) => CartItem(
+              cartItem: cartItems[index],
+              index: index,
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Text(
+                'Total: ${BlocProvider.of<CartCubit>(context).totalPrice} DB',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Spacer(),
+              FilledButton(
+                onPressed: () => _showPaymentOptions(context),
+                child: const Text('Checkout'),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -94,7 +116,8 @@ class _CartViewBodyState extends State<CartViewBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.shopping_cart_outlined, size: 64, color: Colors.grey),
+          const Icon(Icons.shopping_cart_outlined,
+              size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(
             'Your cart is empty',
@@ -112,6 +135,107 @@ class _CartViewBodyState extends State<CartViewBody> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showPaymentOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Payment Method'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.money),
+                  title: const Text('CASH'),
+                  onTap: () {
+                    Navigator.pop(context); // Close selection dialog
+                    _showPaymentSuccess(context, 'CASH');
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.account_balance),
+                  title: const Text('BENFIT'),
+                  onTap: () {
+                    Navigator.pop(context); // Close selection dialog
+                    _showPaymentSuccess(context, 'BENFIT');
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.credit_card),
+                  title: const Text('VISA'),
+                  onTap: () {
+                    Navigator.pop(context); // Close selection dialog
+                    _showPaymentSuccess(context, 'VISA');
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPaymentSuccess(BuildContext context, String method) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.pop(context); // Auto-close after 2 seconds
+          // Add any post-payment logic here
+        });
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Payment Successful!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green[800],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Paid via $method',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

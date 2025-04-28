@@ -15,98 +15,90 @@ class CartItem extends StatelessWidget {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    return Card(
-      margin: const EdgeInsets.all(5),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: constraints.maxWidth * 0.5,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
-                      imageUrl: cartItem.image,
-                      width: double.infinity,
-                      placeholder: (context, url) => Container(
-                        color: theme.colorScheme.surface,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: theme.colorScheme.errorContainer,
-                        child: const Icon(Icons.fastfood, size: 40),
-                      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: size.height * 0.094,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: cartItem.image,
+                    width: double.infinity,
+                    placeholder: (context, url) => Container(
+                      color: theme.colorScheme.surface,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: theme.colorScheme.errorContainer,
+                      child: const Icon(Icons.fastfood, size: 40),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                // Item name and quantity
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustumText(
-                            text: cartItem.name,
-                            size: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          const SizedBox(height: 4),
-                          CustumText(
-                            fontWeight: FontWeight.bold,
-                            text: "Quantity: ${cartItem.count}",
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Remove button
-                    IconButton(
-                      onPressed: () {
-                        BlocProvider.of<CartCubit>(context)
-                            .removeFromCartAndUpdateCount(
-                                cartItem.id, cartItem);
-                      },
-                      icon: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.error,
-                          shape: BoxShape.circle,
+              ),
+              const SizedBox(height: 8),
+              // Item name and quantity
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustumText(
+                          text: cartItem.name,
+                          size: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        child: const Icon(
-                          Icons.remove,
-                          color: Colors.white,
-                          size: 24,
+                        const SizedBox(height: 4),
+                        CustumText(
+                          fontWeight: FontWeight.bold,
+                          text: "Quantity: ${cartItem.count}",
+                          size: 16,
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                // Price information
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CustumText(
-                    text: "${cartItem.price}\$",
-                    size: 18,
-                    fontWeight: FontWeight.bold,
                   ),
+                  // Remove button
+                  IconButton(
+                    onPressed: () {
+                      BlocProvider.of<CartCubit>(context)
+                          .removeFromCartAndUpdateCount(cartItem.id, cartItem);
+                    },
+                    icon: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.error,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Price information
+              Align(
+                alignment: Alignment.centerRight,
+                child: CustumText(
+                  text: "${cartItem.price}DB",
+                  size: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
